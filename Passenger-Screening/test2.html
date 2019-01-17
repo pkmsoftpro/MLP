@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Firebase Web Quickstart</title>
+		<style media="screen">
+		body {
+			display: flex;
+			min-height: 100vh;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+		}
+		#uploader {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 50%;
+			margin-bottom: 10px;
+		}
+		</style>
+	</head>
+	<body>
+	
+	<progress value="0" max="100" id="uploader">0%</progress>
+	<input type="file" value="upload" id="fileButton" accept=".aps, .a3d"/>
+	
+	
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyB4DqGMYjCzi3WCkjH8odLs1179mInWz9s",
+    authDomain: "sample-3035e.firebaseapp.com",
+    databaseURL: "https://sample-3035e.firebaseio.com",
+    projectId: "sample-3035e",
+    storageBucket: "sample-3035e.appspot.com",
+    messagingSenderId: "407355232110"
+  };
+  firebase.initializeApp(config);
+  
+  //get elements
+  var uploader = document.getElementById('uploader');
+  var fileButton = document.getElementById('fileButton');
+  
+  // listen for file selection
+  fileButton.addEventListener('change',function(e) {
+   // get file
+   var file = e.target.files[0];
+   
+   var fileTypes = ['jpg', 'jpeg', 'png', 'what', 'ever', 'you', 'want', 'a3d', 'aps'];  //acceptable file types
+
+   var extension = e.target.files[0].name.split('.').pop().toLowerCase(),  //file extension from input file
+       isSuccess = fileTypes.indexOf(extension) > -1;  //is extension in acceptable types
+   if (isSuccess) {
+       // create a storage reference
+       var storageRef = firebase.storage().ref('sweet_gifs/' + file.name);
+   
+       // upload file
+       var task = storageRef.put(file);
+   
+       // update progress bar
+       task.on('state_changed',
+   
+	     function progress(snapshot) {
+	     var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+	     uploader.value = percentage;
+	    },
+	
+	    function error(err) {
+	 
+	    },
+	
+	    function complete() {
+	
+	    });
+   }
+   else {
+       alert('Unrecongnized type!');
+   }
+    
+  });
+</script>
+	</body>
+</html>

@@ -1,0 +1,134 @@
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>Cover Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="cover.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="site-wrapper">
+
+    <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+            <header class="masthead clearfix">
+                <div class="inner">
+                    <!--<h3 class="masthead-brand">Cover</h3>-->
+                    <nav class="nav nav-masthead">
+                        <a class="nav-link active" href="#">Home</a>
+                        <a class="nav-link" href="#">Features</a>
+                        <a class="nav-link" href="#">Contact</a>
+                    </nav>
+                </div>
+            </header>
+
+            <main role="main" class="inner cover">
+                <h1 class="cover-heading">Passenger Screening</h1>
+                <p class="lead">Choose a passenger file and then the file will upload to Firebase.</p>
+                <!--<p class="lead">-->
+                    <!--<a href="#" class="btn btn-lg btn-secondary">Upload</a>-->
+                <!--</p>-->
+			<meta charset="utf-8">
+			<style media="screen">
+			body {
+				display: flex;
+				min-height: 100vh;
+				width: 100%;
+				padding: 0;
+				margin: 0;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			#uploader {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 50%;
+				margin-bottom: 10px;
+			}
+			</style>
+			<progress value="0" max="100" id="uploader">0%</progress>
+	<input type="file" value="upload" id="fileButton" accept=".aps, .a3d"/>
+	
+            </main>
+
+            <footer class="mastfoot">
+                <div class="inner">
+                    <!--<p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>-->
+                </div>
+            </footer>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyB2g5yKjjYNBVTvCGTr_Fmcc74v7LDvUjk",
+    authDomain: "passscreen-7dd45.firebaseapp.com",
+    databaseURL: "https://passscreen-7dd45.firebaseio.com",
+    projectId: "passscreen-7dd45",
+    storageBucket: "passscreen-7dd45.appspot.com",
+    messagingSenderId: "1039025176380"
+  };
+  firebase.initializeApp(config);
+ //get elements
+  var uploader = document.getElementById('uploader');
+  var fileButton = document.getElementById('fileButton');
+  
+  // listen for file selection
+  fileButton.addEventListener('change',function(e) {
+   // get file
+   var file = e.target.files[0];
+   
+   var fileTypes = ['a3d', 'aps'];  //acceptable file types
+   var extension = e.target.files[0].name.split('.').pop().toLowerCase(),  //file extension from input file
+       isSuccess = fileTypes.indexOf(extension) > -1;  //is extension in acceptable types
+   if (isSuccess) {
+       // create a storage reference
+       var storageRef = firebase.storage().ref('images/' + file.name);
+   
+       // upload file
+       var task = storageRef.put(file);
+   
+       // update progress bar
+       task.on('state_changed',
+   
+	     function progress(snapshot) {
+	     var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+	     uploader.value = percentage;
+	    },
+	
+	    function error(err) {
+	 
+	    },
+	
+	    function complete() {
+	
+	    });
+   }
+   else {
+       alert('UNRECOGNIZED TYPE!!!!!');
+   }
+    
+  });
+</script>
+	</body>
+</html>
